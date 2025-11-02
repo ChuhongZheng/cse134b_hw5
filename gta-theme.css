@@ -379,6 +379,31 @@ footer {
   text-align: center;
   padding: 1rem;
   margin-top: 2rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: var(--gta-white);
+  border-top: 4px solid var(--gta-gold);
+  
+  .social-links {
+    margin: 0.5rem 0;
+    
+    a {
+      color: var(--gta-gold);
+      text-decoration: none;
+      margin: 0 0.5rem;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .disclaimer {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    color: #ccc;
+    border-top: 1px solid #444;
+  }
 }
 
 /* 页脚样式 - 漫画主题 */
