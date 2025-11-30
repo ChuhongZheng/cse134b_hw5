@@ -52,30 +52,13 @@
             text-shadow: 1px 1px 0 #000;
         }
         
-        interest-card {   
-          display: block;
-          width: 300px;
-          height: 410px;
-          margin: 12px;
-          padding: 12px;
-          border: 2px solid #ccc;
-          border-radius: 8px;
-          text-align: center;
+        /* Grid layout for project cards */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            justify-content: center;
         }
-        
-        interest-card img { 
-          width: 80%;
-          height: 70%;
-          border-radius: 4px;
-          object-fit: cover;
-          object-fit: cover;
-          display: block;
-          margin: 0 auto 10px auto;
-        }
-
-        interest-card[type="soccer"]     { background:#e8f4e8; }
-        interest-card[type="basketball"] { background:#f4e8e8; }
-        interest-card[type="travel"]     { background:#e8e8f4; }
         
         iframe {
             width: 100%;
@@ -157,6 +140,10 @@
             .about-theme h1 {
                 font-size: 3rem;
             }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -208,39 +195,34 @@
             <h2>Interests</h2>
             <p>Outside of academics, I enjoy:</p>
             
-            <interest-card 
-                type="soccer" 
-                title="Soccer" 
-                description="Playing and watching soccer matches" 
-                image="ckcfc.jpg" 
-                alt="Soccer match">
-                <h2>Soccer</h2>
-                <img src="ckcfc.jpg" alt="Soccer match">
-                <p>Playing and watching soccer matches</p>
-            </interest-card>
-            
-            <interest-card 
-                type="basketball" 
-                title="Basketball" 
-                description="Playing basketball with friends and watching NBA games" 
-                image="basketball.jpg" 
-                alt="Basketball game">
-                <h2>Basketball</h2>
-                <img src="basketball.jpg" alt="Basketball game">
-                <p>Playing basketball with friends and watching NBA games</p>
-            </interest-card>
-            
-            <interest-card 
-                type="travel" 
-                title="Travel" 
-                description="Exploring new places and experiencing different cultures" 
-                image="travel.jpg" 
-                alt="Travel destinations">
-                <h2>Travel</h2>
-                <img src="travel.jpg" alt="Travel destinations">
-                <p>Exploring new places and experiencing different cultures</p>
-            </interest-card>
-            
+            <div class="cards-container">
+                <project-card 
+                    type="soccer" 
+                    title="Soccer" 
+                    description="Playing and watching soccer matches" 
+                    image="ckcfc.jpg" 
+                    alt="Soccer match"
+                    link="http://ckc.zju.edu.cn/2015/0602/c54004a1766196/page.htm">
+                </project-card>
+                
+                <project-card 
+                    type="basketball" 
+                    title="Basketball" 
+                    description="Playing basketball with friends and watching NBA games" 
+                    image="basketball.jpg" 
+                    alt="Basketball game"
+                    link="https://www.youtube.com/watch?v=9v6EFRAb_as">
+                </project-card>
+                
+                <project-card 
+                    type="travel" 
+                    title="Travel" 
+                    description="Exploring new places and experiencing different cultures" 
+                    image="travel.jpg" 
+                    alt="Travel destinations"
+                    link="https://www.youtube.com/watch?v=E6I-ecWrgNo">
+                </project-card>
+            </div>
         </section>
         
         <section>
