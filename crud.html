@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Operations - My Portfolio</title>
+    <style>
+        body {
+            font-family: 'Roboto', 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #000;
+        }
+        
+        header {
+            text-align: center;
+            padding: 1rem;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        h1 {
+            margin: 0;
+            color: #333;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 1rem 0 0;
+        }
+        
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #4A7B9D;
+            font-weight: bold;
+        }
+        
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        section {
+            margin: 2rem 0;
+        }
+        
+        .form-container {
+            background: #f9f9f9;
+            padding: 2rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #4A7B9D;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-right: 1rem;
+            margin-top: 1rem;
+        }
+        
+        button:hover {
+            background-color: #3a6b8d;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f5f5f5;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-edit {
+            background-color: #FFB347;
+        }
+        
+        .btn-delete {
+            background-color: #e63946;
+        }
+        
+        .notification {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        #jsonbin-config {
+            background: #f0f0f0;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Player Manager</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="experiments.html">Experiments</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="crud.html">CRUD</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Manage NBA Players</h2>
+            
+            <div class="form-container">
+                <h3 id="form-title">Add New Player</h3>
+                <form id="player-form">
+                    <input type="hidden" id="player-id">
+                    <div class="form-group">
+                        <label for="player-name">Player Name:</label>
+                        <input type="text" id="player-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="player-team">Team:</label>
+                        <input type="text" id="player-team" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="player-college">College:</label>
+                        <input type="text" id="player-college" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="player-number">Number:</label>
+                        <input type="number" id="player-number" min="0" max="99" required>
+                    </div>
+                    
+                    <button type="submit" id="save-btn">Save Player</button>
+                    <button type="button" id="cancel-btn">Cancel</button>
+                </form>
+            </div>
+            
+            <div id="notification-area"></div>
+            
+            <h3>Players Data</h3>
+            
+            <div>
+                <button id="load-local">Load Local Data</button>
+                <button id="load-remote">Load Remote Data</button>
+            </div>
+            
+            <table id="players-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Team</th>
+                        <th>College</th>
+                        <th>Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="players-list">
+                    <!-- Player data will be loaded here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+        // DOM Elements
+        const playerForm = document.getElementById('player-form');
+        const playersList = document.getElementById('players-list');
+        const notificationArea = document.getElementById('notification-area');
+        const loadLocalBtn = document.getElementById('load-local');
+        const loadRemoteBtn = document.getElementById('load-remote');
+        const formTitle = document.getElementById('form-title');
+        const saveBtn = document.getElementById('save-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        
+        // Form fields
+        const playerId = document.getElementById('player-id');
+        const playerName = document.getElementById('player-name');
+        const playerTeam = document.getElementById('player-team');
+        const playerCollege = document.getElementById('player-college');
+        const playerNumber = document.getElementById('player-number');
+        
+        // Current data source
+        let currentDataSource = 'local'; // 'local' or 'remote'
+        let playersData = [];
+        
+        // Show notification
+        function showNotification(message, isSuccess = true) {
+            notificationArea.innerHTML = `
+                <div class="notification ${isSuccess ? 'success' : 'error'}">
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => {
+                notificationArea.innerHTML = '';
+            }, 5000);
+        }
+        
+        // Reset form
+        function resetForm() {
+            playerForm.reset();
+            playerId.value = '';
+            formTitle.textContent = 'Add New Player';
+            saveBtn.textContent = 'Save Player';
+        }
+        
+        // Load players from localStorage
+        function loadPlayersFromLocalStorage() {
+            try {
+                const data = localStorage.getItem('nbaPlayers');
+                playersData = data ? JSON.parse(data) : [];
+                renderPlayersTable();
+                showNotification('Players loaded from localStorage successfully!');
+            } catch (error) {
+                showNotification('Error loading players from localStorage: ' + error.message, false);
+            }
+        }
+        
+        // Save players to localStorage
+        function savePlayersToLocalStorage() {
+            try {
+                localStorage.setItem('nbaPlayers', JSON.stringify(playersData));
+                showNotification('Players saved to localStorage successfully!');
+            } catch (error) {
+                showNotification('Error saving players to localStorage: ' + error.message, false);
+            }
+        }
+        
+        // Load players from remote JSONBIN
+        async function loadPlayersFromRemote() {
+            const url = 'https://api.jsonbin.io/v3/b/692cc54eae596e708f7aea78';
+            
+            try {
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to load data: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                // Handle both direct array and wrapped object formats
+                playersData = Array.isArray(result) ? result : (result.record || []);
+                renderPlayersTable();
+                showNotification('Players loaded from remote successfully!');
+            } catch (error) {
+                showNotification('Error loading players from remote: ' + error.message, false);
+            }
+        }
+        
+        // Save players to remote JSONBIN
+        async function savePlayersToRemote() {
+            const url = 'https://api.jsonbin.io/v3/b/692cc54eae596e708f7aea78';
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(playersData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to save data: ${response.status}`);
+                }
+                
+                showNotification('Players saved to remote successfully!');
+            } catch (error) {
+                showNotification('Error saving players to remote: ' + error.message, false);
+            }
+        }
+        
+        // Render players table
+        function renderPlayersTable() {
+            playersList.innerHTML = '';
+            
+            if (playersData.length === 0) {
+                playersList.innerHTML = '<tr><td colspan="5">No players found. Add a new player or load data.</td></tr>';
+                return;
+            }
+            
+            playersData.forEach((player, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${player.name}</td>
+                    <td>${player.team}</td>
+                    <td>${player.college}</td>
+                    <td>${player.number}</td>
+                    <td class="actions">
+                        <button class="btn-edit" onclick="editPlayer(${index})">Edit</button>
+                        <button class="btn-delete" onclick="deletePlayer(${index})">Delete</button>
+                    </td>
+                `;
+                playersList.appendChild(row);
+            });
+        }
+        
+        // Edit player
+        function editPlayer(index) {
+            const player = playersData[index];
+            playerId.value = index;
+            playerName.value = player.name;
+            playerTeam.value = player.team;
+            playerCollege.value = player.college;
+            playerNumber.value = player.number;
+            
+            formTitle.textContent = 'Edit Player';
+            saveBtn.textContent = 'Update Player';
+        }
+        
+        // Delete player
+        function deletePlayer(index) {
+            if (confirm('Are you sure you want to delete this player?')) {
+                playersData.splice(index, 1);
+                
+                // Save to current data source
+                if (currentDataSource === 'local') {
+                    savePlayersToLocalStorage();
+                } else {
+                    savePlayersToRemote();
+                }
+                
+                renderPlayersTable();
+                showNotification('Player deleted successfully!');
+            }
+        }
+        
+        // Event Listeners
+        playerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const player = {
+                name: playerName.value.trim(),
+                team: playerTeam.value.trim(),
+                college: playerCollege.value.trim(),
+                number: parseInt(playerNumber.value)
+            };
+            
+            const index = playerId.value;
+            
+            if (index === '') {
+                // Add new player
+                playersData.push(player);
+            } else {
+                // Update existing player
+                playersData[parseInt(index)] = player;
+            }
+            
+            // Save to current data source
+            if (currentDataSource === 'local') {
+                savePlayersToLocalStorage();
+            } else {
+                savePlayersToRemote();
+            }
+            
+            renderPlayersTable();
+            resetForm();
+        });
+        
+        loadLocalBtn.addEventListener('click', function() {
+            currentDataSource = 'local';
+            loadPlayersFromLocalStorage();
+        });
+        
+        loadRemoteBtn.addEventListener('click', function() {
+            currentDataSource = 'remote';
+            loadPlayersFromRemote();
+        });
+        
+        cancelBtn.addEventListener('click', resetForm);
+        
+        // Initialize
+        resetForm();
+        renderPlayersTable();
+    </script>
+</body>
+</html>
