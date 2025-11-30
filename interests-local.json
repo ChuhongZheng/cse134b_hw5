@@ -1,0 +1,26 @@
+[
+  {
+    "type": "soccer",
+    "title": "Soccer",
+    "description": "Playing and watching soccer matches - Local Data Source",
+    "image": "ckcfc.jpg",
+    "alt": "Soccer match",
+    "link": "http://ckc.zju.edu.cn/2015/0602/c54004a1766196/page.htm"
+  },
+  {
+    "type": "basketball",
+    "title": "Basketball",
+    "description": "Playing basketball with friends and watching NBA games - Local Data Source",
+    "image": "basketball.jpg",
+    "alt": "Basketball game",
+    "link": "https://www.youtube.com/watch?v=9v6EFRAb_as"
+  },
+  {
+    "type": "travel",
+    "title": "Travel",
+    "description": "Exploring new places and experiencing different cultures - Local Data Source",
+    "image": "travel.jpg",
+    "alt": "Travel destinations",
+    "link": "https://www.youtube.com/watch?v=E6I-ecWrgNo"
+  }
+]

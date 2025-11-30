@@ -58,7 +58,7 @@ class ProjectCard extends HTMLElement {
         flex-shrink: 0;
       }
       
-      .card-image-container {
+      picture {
         width: 100%;
         height: 200px;
         margin-bottom: 12px;
@@ -122,11 +122,9 @@ class ProjectCard extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <style>${style.textContent}</style>
       <h2 class="card-title">${title}</h2>
-      ${image ? `<div class="card-image-container">
-        <picture>
-          <img src="${image}" alt="${alt}" class="card-image">
-        </picture>
-      </div>` : ''}
+      ${image ? `<picture>
+        <img src="${image}" alt="${alt}" class="card-image">
+      </picture>` : ''}
       <p class="card-description">${description}</p>
       <a href="${link}" class="card-link">Learn More</a>
     `;

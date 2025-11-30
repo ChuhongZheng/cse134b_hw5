@@ -67,6 +67,45 @@
             border: none;
         }
         
+        /* Buttons for loading data */
+        .load-buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .load-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+        
+        .load-button:hover {
+            background-color: #45a049;
+        }
+        
+        .load-button.remote {
+            background-color: #2196F3;
+        }
+        
+        .load-button.remote:hover {
+            background-color: #1976D2;
+        }
+        
+        .instructions {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin: 20px 0;
+        }
+        
         /* Hamburger Menu Style */
         .menu-toggle {
             display: none;
@@ -195,33 +234,17 @@
             <h2>Interests</h2>
             <p>Outside of academics, I enjoy:</p>
             
-            <div class="cards-container">
-                <project-card 
-                    type="soccer" 
-                    title="Soccer" 
-                    description="Playing and watching soccer matches" 
-                    image="ckcfc.jpg" 
-                    alt="Soccer match"
-                    link="http://ckc.zju.edu.cn/2015/0602/c54004a1766196/page.htm">
-                </project-card>
-                
-                <project-card 
-                    type="basketball" 
-                    title="Basketball" 
-                    description="Playing basketball with friends and watching NBA games" 
-                    image="basketball.jpg" 
-                    alt="Basketball game"
-                    link="https://www.youtube.com/watch?v=9v6EFRAb_as">
-                </project-card>
-                
-                <project-card 
-                    type="travel" 
-                    title="Travel" 
-                    description="Exploring new places and experiencing different cultures" 
-                    image="travel.jpg" 
-                    alt="Travel destinations"
-                    link="https://www.youtube.com/watch?v=E6I-ecWrgNo">
-                </project-card>
+            <div class="load-buttons">
+                <button id="load-local" class="load-button">Load Local</button>
+                <button id="load-remote" class="load-button remote">Load Remote</button>
+            </div>
+            
+            <div class="instructions" id="instruction-text">
+                Please click either "Load Local" or "Load Remote" button to load interest data.
+            </div>
+            
+            <div class="cards-container" id="interests-container">
+                <!-- Cards will be loaded here by JavaScript -->
             </div>
         </section>
         
@@ -319,6 +342,99 @@
                         window.location.href = href;
                     });
                 });
+            });
+            
+            // Save local data to localStorage for testing
+            const localData = [
+                {
+                    "type": "soccer",
+                    "title": "Soccer",
+                    "description": "Playing and watching soccer matches - Local Data Source",
+                    "image": "ckcfc.jpg",
+                    "alt": "Soccer match",
+                    "link": "http://ckc.zju.edu.cn/2015/0602/c54004a1766196/page.htm"
+                },
+                {
+                    "type": "basketball",
+                    "title": "Basketball",
+                    "description": "Playing basketball with friends and watching NBA games - Local Data Source",
+                    "image": "basketball.jpg",
+                    "alt": "Basketball game",
+                    "link": "https://www.youtube.com/watch?v=9v6EFRAb_as"
+                },
+                {
+                    "type": "travel",
+                    "title": "Travel",
+                    "description": "Exploring new places and experiencing different cultures - Local Data Source",
+                    "image": "travel.jpg",
+                    "alt": "Travel destinations",
+                    "link": "https://www.youtube.com/watch?v=E6I-ecWrgNo"
+                }
+            ];
+            
+            localStorage.setItem('interestsData', JSON.stringify(localData));
+            
+            // Get DOM elements
+            const interestsContainer = document.getElementById('interests-container');
+            const instructionText = document.getElementById('instruction-text');
+            const loadLocalButton = document.getElementById('load-local');
+            const loadRemoteButton = document.getElementById('load-remote');
+            
+            // Function to render interest cards
+            function renderInterestCards(data) {
+                // Clear container
+                interestsContainer.innerHTML = '';
+                
+                // Remove instruction text
+                instructionText.style.display = 'none';
+                
+                // Render cards
+                data.forEach(item => {
+                    const projectCard = document.createElement('project-card');
+                    projectCard.setAttribute('type', item.type);
+                    projectCard.setAttribute('title', item.title);
+                    projectCard.setAttribute('description', item.description);
+                    projectCard.setAttribute('image', item.image);
+                    projectCard.setAttribute('alt', item.alt);
+                    projectCard.setAttribute('link', item.link);
+                    interestsContainer.appendChild(projectCard);
+                });
+            }
+            
+            // Load data from localStorage
+            loadLocalButton.addEventListener('click', () => {
+                try {
+                    const data = JSON.parse(localStorage.getItem('interestsData'));
+                    if (data && Array.isArray(data)) {
+                        renderInterestCards(data);
+                    } else {
+                        interestsContainer.innerHTML = '<p>Error: No local data found.</p>';
+                    }
+                } catch (error) {
+                    interestsContainer.innerHTML = '<p>Error loading local data: ' + error.message + '</p>';
+                }
+            });
+            
+            // Load data from remote server (you'll need to replace with actual URL)
+            loadRemoteButton.addEventListener('click', () => {
+                // Replace with your actual remote URL
+                const remoteUrl = 'https://api.jsonbin.io/v3/b/692ca153d0ea881f400a0745'; 
+                
+                fetch(remoteUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Handle data wrapped in record property (as returned by some APIs like JSONBin)
+                        const interestsData = data.record || data;
+                        
+                        if (interestsData && Array.isArray(interestsData)) {
+                            renderInterestCards(interestsData);
+                        } else {
+                            interestsContainer.innerHTML = '<p>Error: Invalid data format from remote source.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        interestsContainer.innerHTML = '<p>Error loading remote data: ' + error.message + '</p>';
+                    });
             });
         });
     </script>
